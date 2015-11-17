@@ -5,6 +5,8 @@ mydb = dbConnect(MySQL(), user='b565', password='b565Pwd', dbname='b565',
     host='156.56.179.122')
 dbListTables(mydb)
 
+dbGetQuery(mydb, 'describe intervaldata;')
+
 intdates <- dbGetQuery(mydb, 'SELECT Date(`when`) FROM intervaldata;')
 intdates <- as.Date(intdates$Date)
 intseconds <- as.numeric(intdates)
