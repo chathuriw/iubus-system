@@ -47,8 +47,8 @@ public class ScheduleVarience {
                 Set<Time> startTimesASchedule = allASchedules.keySet();
                 for (Time startTime : allSchedules.keySet()){
                     for (Time startA : allASchedules.keySet()){
-                        if (startTime.getTime() <= startA.getTime() + 2 && startTime.getTime() >= startA.getTime() + 2){
-
+                        if (startTime.getTime() <= startA.getTime() + 10 && startTime.getTime() >= startA.getTime() - 5){
+                            long variance = startTime.getTime() - startA.getTime();
                         }
                     }
                 }
