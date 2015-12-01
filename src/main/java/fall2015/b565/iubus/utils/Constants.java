@@ -27,5 +27,6 @@ public class Constants {
     public static final String JDBC_DRIVER = "jdbc.driver";
     public static final String JDBC_USER = "jdbc.user";
     public static final String JDBC_PWD = "jdbc.password";
+    public static final String RESULT_FOLDER = "result.folder";
 
 }

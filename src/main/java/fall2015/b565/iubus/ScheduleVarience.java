@@ -22,12 +22,17 @@
 package fall2015.b565.iubus;
 
 import fall2015.b565.iubus.db.DataReader;
+import fall2015.b565.iubus.utils.IuBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.sql.Time;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +40,18 @@ import java.util.Set;
 public class ScheduleVarience {
     private static Logger log = LoggerFactory.getLogger(ScheduleVarience.class);
     public static void main(String[] args) throws Exception{
+        PrintWriter resultWriter;
         try {
+            String resultFileLocation = IuBusUtils.getResultFolder();
+            String resultFileName = resultFileLocation + getResultFileName();
+
+            File resultFolder = new File(resultFileLocation);
+            if (!resultFolder.exists()){
+                resultFolder.mkdir();
+            }
+            File resultFile = new File(resultFileName);
+            resultWriter = new PrintWriter(resultFile, "UTF-8");
+            resultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
             DataReader reader = new DataReader();
             int aRouteMR = 331;
             int count = 0;
@@ -48,22 +64,26 @@ public class ScheduleVarience {
                     for (Time startA : allASchedules.keySet()){
                         if (startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 10*1000*60) && startA.getTime() >= (startTime.getTime() - 5*1000*60)){
-                                long variance = startTime.getTime() - startA.getTime();
-                                System.out.println("Varience : " + variance);
-                                System.out.println("Start Time Actual : " + startTime);
-                                System.out.println("Start Time Schedule : " + startA);
-                                System.out.println("Date : " + actualSchedule.getDate());
-                                count++;
+                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                resultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
                             }
                         }
                     }
                 }
             }
-            System.out.println(count);
+            resultWriter.flush();
         } catch (ParseException e) {
             log.error("Error while parsing date", e);
             throw new RuntimeException("Error while parsing date", e);
         }
+    }
+
+
+
+    private static String getResultFileName (){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+        Calendar cal = Calendar.getInstance();
+        return dateFormat.format(cal.getTime());
     }
 
 //    private static long getMean(Set<Time> timeSet){
