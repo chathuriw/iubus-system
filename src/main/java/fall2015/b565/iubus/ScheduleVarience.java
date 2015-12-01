@@ -38,22 +38,28 @@ public class ScheduleVarience {
         try {
             DataReader reader = new DataReader();
             int aRouteMR = 331;
+            int count = 0;
             Schedule aShedule = reader.getAShedule(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualAShedule(aRouteMR);
             for (ActualSchedule actualSchedule : actualASheduleList){
                 Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
-                Set<Time> startTimesOfActualASchedule = allSchedules.keySet();
-                Set<Time> startTimesASchedule = allASchedules.keySet();
                 for (Time startTime : allSchedules.keySet()){
                     for (Time startA : allASchedules.keySet()){
-                        if (startTime.getTime() <= startA.getTime() + 10 && startTime.getTime() >= startA.getTime() - 5){
-                            long variance = startTime.getTime() - startA.getTime();
+                        if (startTime.getTime() != 0 ){
+                            if (startA.getTime() <= (startTime.getTime() + 10*1000*60) && startA.getTime() >= (startTime.getTime() - 5*1000*60)){
+                                long variance = startTime.getTime() - startA.getTime();
+                                System.out.println("Varience : " + variance);
+                                System.out.println("Start Time Actual : " + startTime);
+                                System.out.println("Start Time Schedule : " + startA);
+                                System.out.println("Date : " + actualSchedule.getDate());
+                                count++;
+                            }
                         }
                     }
                 }
             }
-
+            System.out.println(count);
         } catch (ParseException e) {
             log.error("Error while parsing date", e);
             throw new RuntimeException("Error while parsing date", e);
