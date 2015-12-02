@@ -145,4 +145,37 @@ public class DataReader {
             }
         }
     }
+
+    public List<Date> getDistinctDates () throws Exception{
+        List<Date> distinctDates = new ArrayList<Date>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
+        Connection connection = null;
+        String queryString = "SELECT DISTINCT(e.day) FROM A_Route_MR_TIME e ORDER BY e.day ASC";
+        System.out.println(queryString);
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            preparedStatement = connection.prepareStatement(queryString);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    distinctDates.add(resultSet.getDate(1));
+                }
+            }
+            return distinctDates;
+        } catch (SQLException e) {
+            String error = "Error while retrieving data from database.";
+            log.error(error, e);
+            throw new Exception(error, e);
+        }  finally {
+            try{
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while connecting with mysql server", e);
+                throw new Exception("Error while connecting with mysql server", e);
+            }
+        }
+    }
 }
