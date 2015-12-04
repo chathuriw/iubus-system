@@ -5,6 +5,7 @@ import MySQLdb
 # from datetime import timedelta
 
 # add 'limit 1000' to last row of query if DEBUG = True
+newrow_i = 0
 DEBUG = False
 
 
@@ -31,6 +32,8 @@ def getTime(datetime):
 
 # writes out the current row and sets up a new one
 def newRow(line):
+    global newrow_i
+    print "\rNew row number", newrow_i, line[6],
     newrow_i = newrow_i + 1
     when_output = getDate(line[6]) + ',' + str(line[4]) + ','
     time_output = getDate(line[6]) + ',' + str(line[4]) + ','
