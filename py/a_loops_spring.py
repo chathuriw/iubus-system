@@ -31,6 +31,7 @@ def getTime(datetime):
 
 # writes out the current row and sets up a new one
 def newRow(line):
+    newrow_i = newrow_i + 1
     when_output = getDate(line[6]) + ',' + str(line[4]) + ','
     time_output = getDate(line[6]) + ',' + str(line[4]) + ','
     return [when_output, time_output]
@@ -229,7 +230,6 @@ for i in range(1, cursor.rowcount):
                 print "looks like we'll have to continue on the next row..."
             writeRow(when_output, time_output)
             [when_output, time_output] = newRow(line)
-            [j, k] = resetJK()
         [j, k] = increment(j, k)
 
     # after escaping the above while loop, this line should match this column
