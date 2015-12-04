@@ -19,14 +19,43 @@
  *
 */
 
-package fall2015.b565.iubus.utils;
+package fall2015.b565.iubus;
 
-public class Constants {
-    public static final String IUBUS_PROPERTIES = "iu-bus.properties";
-    public static final String JDBC_URL = "jdbc.url";
-    public static final String JDBC_DRIVER = "jdbc.driver";
-    public static final String JDBC_USER = "jdbc.user";
-    public static final String JDBC_PWD = "jdbc.password";
-    public static final String RESULT_FOLDER = "result.folder";
+import java.sql.Date;
+import java.sql.Time;
+import java.util.Map;
 
+public class ActualSchedule {
+    private int route;
+    private Date date;
+    private Map<Time, Time[]> allSchedules;
+
+    public ActualSchedule(int route, Date date) {
+        this.route = route;
+        this.date = date;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public int getRoute() {
+        return route;
+    }
+
+    public void setRoute(int route) {
+        this.route = route;
+    }
+
+    public Map<Time, Time[]> getAllSchedules() {
+        return allSchedules;
+    }
+
+    public void setAllSchedules(Map<Time, Time[]> allSchedules) {
+        this.allSchedules = allSchedules;
+    }
 }

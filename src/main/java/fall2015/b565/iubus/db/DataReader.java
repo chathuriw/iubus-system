@@ -21,33 +21,42 @@
 
 package fall2015.b565.iubus.db;
 
-import fall2015.b565.iubus.utils.DBUtils;
+import fall2015.b565.iubus.ActualSchedule;
+import fall2015.b565.iubus.Schedule;
+import fall2015.b565.iubus.utils.IuBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DataReader {
     private static Logger log = LoggerFactory.getLogger(DataReader.class);
 
-    public Map<Time, Time> getTime (Time btweenTime1, Time btweenTime2, Time scheduleTime, int routeId, int stopId) throws Exception{
-        Map<Time, Time> timeMap = new HashMap<Time, Time>();
-        String connectionURL =  DBUtils.getJDBCUrl();
+    public Schedule getASheduleFall(int routeId) throws Exception{
+        Schedule schedule = new Schedule(routeId);
+        Map<Time, Time[]> allSchedules = new HashMap<Time, Time[]>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT e.WHEN_NEW FROM TEST4 e WHERE  e.WHEN_NEW > '" + btweenTime1 + "' AND e.WHEN_NEW < '" + btweenTime2 + "' AND e.ROUTE_ID=" + routeId  + " AND e.FROM=" + stopId;
+        String queryString = "SELECT * FROM A_Schedule_MR_allbuses_Fall";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, DBUtils.getJDBCUser(), DBUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
                 while (resultSet.next()) {
-                    timeMap.put(resultSet.getTime(1), scheduleTime);
+                    Time startTime = resultSet.getTime(1);
+                    Time[] restOfTheTime = {resultSet.getTime(2), resultSet.getTime(3), resultSet.getTime(4), resultSet.getTime(5)};
+                    allSchedules.put(startTime, restOfTheTime);
                 }
+                schedule.setAllSchedules(allSchedules);
             }
+            return schedule;
         } catch (SQLException e) {
             String error = "Error while retrieving data from database.";
             log.error(error, e);
@@ -58,10 +67,192 @@ public class DataReader {
                     preparedStatement.close();
                 }
             } catch (SQLException e) {
-               log.error("Error while connecting with mysql server", e);
+                log.error("Error while connecting with mysql server", e);
                 throw new Exception("Error while connecting with mysql server", e);
             }
         }
-        return timeMap;
+    }
+
+    public List<ActualSchedule> getActualASheduleFall(int routeId) throws Exception{
+        List<ActualSchedule> allActualSchedules = new ArrayList<ActualSchedule>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
+        Connection connection = null;
+        String queryString = "SELECT e.day, e.busid, e.67, e.to39, e.to1, e.to12, e.to67 FROM A_Route_MR_Fall e ORDER BY e.day, e.67";
+        System.out.println(queryString);
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            preparedStatement = connection.prepareStatement(queryString);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    Date date = resultSet.getDate(1);
+                    ActualSchedule actualSchedule = new ActualSchedule(routeId, date);
+                    Map<Time, Time[]> allSchedules = new HashMap<Time, Time[]>();
+                    Time startTime = resultSet.getTime(3);
+                    Time[] restOfTheTime = {resultSet.getTime(4), resultSet.getTime(5), resultSet.getTime(6), resultSet.getTime(7)};
+                    allSchedules.put(startTime, restOfTheTime);
+                    actualSchedule.setAllSchedules(allSchedules);
+                    allActualSchedules.add(actualSchedule);
+                }
+            }
+            return allActualSchedules;
+        } catch (SQLException e) {
+            String error = "Error while retrieving data from database.";
+            log.error(error, e);
+            throw new Exception(error, e);
+        }  finally {
+            try{
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while connecting with mysql server", e);
+                throw new Exception("Error while connecting with mysql server", e);
+            }
+        }
+    }
+
+    public List<Date> getDistinctDatesFall() throws Exception{
+        List<Date> distinctDates = new ArrayList<Date>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
+        Connection connection = null;
+        String queryString = "SELECT DISTINCT(e.day) FROM A_Route_MR_Fall e ORDER BY e.day ASC";
+        System.out.println(queryString);
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            preparedStatement = connection.prepareStatement(queryString);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    distinctDates.add(resultSet.getDate(1));
+                }
+            }
+            return distinctDates;
+        } catch (SQLException e) {
+            String error = "Error while retrieving data from database.";
+            log.error(error, e);
+            throw new Exception(error, e);
+        }  finally {
+            try{
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while connecting with mysql server", e);
+                throw new Exception("Error while connecting with mysql server", e);
+            }
+        }
+    }
+
+    public Schedule getASheduleSpring(int routeId) throws Exception{
+        Schedule schedule = new Schedule(routeId);
+        Map<Time, Time[]> allSchedules = new HashMap<Time, Time[]>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
+        Connection connection = null;
+        String queryString = "SELECT * FROM A_Schedule_MR_allbuses_Spring";
+        System.out.println(queryString);
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            preparedStatement = connection.prepareStatement(queryString);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    Time startTime = resultSet.getTime(1);
+                    Time[] restOfTheTime = {resultSet.getTime(2), resultSet.getTime(3), resultSet.getTime(4), resultSet.getTime(5)};
+                    allSchedules.put(startTime, restOfTheTime);
+                }
+                schedule.setAllSchedules(allSchedules);
+            }
+            return schedule;
+        } catch (SQLException e) {
+            String error = "Error while retrieving data from database.";
+            log.error(error, e);
+            throw new Exception(error, e);
+        }  finally {
+            try{
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while connecting with mysql server", e);
+                throw new Exception("Error while connecting with mysql server", e);
+            }
+        }
+    }
+
+    public List<ActualSchedule> getActualASheduleSpring(int routeId) throws Exception{
+        List<ActualSchedule> allActualSchedules = new ArrayList<ActualSchedule>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
+        Connection connection = null;
+        String queryString = "SELECT e.day, e.busid, e.67, e.to39, e.to1, e.to12, e.to67 FROM A_Route_MR_Spring e ORDER BY e.day, e.67";
+        System.out.println(queryString);
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            preparedStatement = connection.prepareStatement(queryString);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    Date date = resultSet.getDate(1);
+                    ActualSchedule actualSchedule = new ActualSchedule(routeId, date);
+                    Map<Time, Time[]> allSchedules = new HashMap<Time, Time[]>();
+                    Time startTime = resultSet.getTime(3);
+                    Time[] restOfTheTime = {resultSet.getTime(4), resultSet.getTime(5), resultSet.getTime(6), resultSet.getTime(7)};
+                    allSchedules.put(startTime, restOfTheTime);
+                    actualSchedule.setAllSchedules(allSchedules);
+                    allActualSchedules.add(actualSchedule);
+                }
+            }
+            return allActualSchedules;
+        } catch (SQLException e) {
+            String error = "Error while retrieving data from database.";
+            log.error(error, e);
+            throw new Exception(error, e);
+        }  finally {
+            try{
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while connecting with mysql server", e);
+                throw new Exception("Error while connecting with mysql server", e);
+            }
+        }
+    }
+
+    public List<Date> getDistinctDatesSpring() throws Exception{
+        List<Date> distinctDates = new ArrayList<Date>();
+        String connectionURL =  IuBusUtils.getJDBCUrl();
+        Connection connection = null;
+        String queryString = "SELECT DISTINCT(e.day) FROM A_Route_MR_Spring e ORDER BY e.day ASC";
+        System.out.println(queryString);
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            preparedStatement = connection.prepareStatement(queryString);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet != null){
+                while (resultSet.next()) {
+                    distinctDates.add(resultSet.getDate(1));
+                }
+            }
+            return distinctDates;
+        } catch (SQLException e) {
+            String error = "Error while retrieving data from database.";
+            log.error(error, e);
+            throw new Exception(error, e);
+        }  finally {
+            try{
+                if (preparedStatement != null){
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                log.error("Error while connecting with mysql server", e);
+                throw new Exception("Error while connecting with mysql server", e);
+            }
+        }
     }
 }

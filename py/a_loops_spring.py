@@ -80,8 +80,8 @@ def resetJK():
 #                           passwd="b565Pwd", db="b565")
 
 # connect to local mysql server
-mysqldb = MySQLdb.connect(host="localhost", user="rojahend",
-                          passwd="password", db="buses")
+mysqldb = MySQLdb.connect(host="156.56.179.122", user="b565",
+                          passwd="b565Pwd", db="b565")
 cursor = mysqldb.cursor()
 
 # these stops and their order were calculated using a_loops.R
@@ -104,7 +104,7 @@ aStops = [67, 39, 38, 37, 41, 1, 4, 6, 8, 10, 11, 12, 13, 14, 36, 30, 34, 35]
 # """
 query = """
 SELECT * FROM intervaldata where
-route_id=331 and (
+route_id=354 and (
 (`from`=35 and `to`=67) or
 (`from`=67 and `to`=67) or
 (`from`=67 and `to`=39) or
@@ -157,11 +157,11 @@ output = "day,busid"
 for n in aStops:
     output = output + ",to" + str(n) + ",from" + str(n)
 if DEBUG:
-        print output
+    print output
 
 # write the column names to an output file
-fout_when = open("a_route_when.csv", 'w')
-fout_time = open("a_route_time.csv", 'w')
+fout_when = open("a_route_spring_when.csv", 'w')
+fout_time = open("a_route_spring_time.csv", 'w')
 fout_when.write(output + "\n")
 fout_time.write(output + "\n")
 
