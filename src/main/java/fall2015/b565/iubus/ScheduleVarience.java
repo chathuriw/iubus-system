@@ -23,6 +23,8 @@ package fall2015.b565.iubus;
 
 import fall2015.b565.iubus.db.DataReaderARoute;
 import fall2015.b565.iubus.db.DataReaderBRoute;
+import fall2015.b565.iubus.db.DataReaderERoute;
+import fall2015.b565.iubus.db.DataReaderXRoute;
 import fall2015.b565.iubus.utils.IUBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,10 @@ public class ScheduleVarience {
         calculateARouteVarianceSpring();
         calculateBRouteVarianceFall();
         calculateBRouteVarianceSpring();
+        calculateERouteVarianceFall();
+        calculateERouteVarianceSpring();
+        calculateXRouteVarianceFall();
+        calculateXRouteVarianceSpring();
 //        PrintWriter varienceResultWriter;
 //        try {
 //            String resultFileLocation = IuBusUtils.getResultFolder();
@@ -113,7 +119,7 @@ public class ScheduleVarience {
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
-                        if (startTime.getTime() != 0 ){
+                        if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
@@ -175,7 +181,7 @@ public class ScheduleVarience {
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
-                        if (startTime.getTime() != 0 ){
+                        if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
@@ -331,6 +337,257 @@ public class ScheduleVarience {
             throw new RuntimeException("Error while parsing date", e);
         }
     }
+
+
+    public static void calculateERouteVarianceFall() throws Exception{
+        PrintWriter varienceResultWriter, varianceAtTimeWriter;
+        Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
+        try {
+            String resultFileLocation = IUBusUtils.getResultFolder();
+            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("fall_E");
+            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("fall_E");
+
+            File resultFolder = new File(resultFileLocation);
+            if (!resultFolder.exists()){
+                resultFolder.mkdir();
+            }
+            File varResultFile = new File(varianceResultFileName);
+            File varAtTimeResultFile = new File(varianceAtTimeFileName);
+            varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
+            varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
+            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            DataReaderERoute reader = new DataReaderERoute();
+            int aRouteMR = 320;
+            Schedule aShedule = reader.getESheduleFall(aRouteMR);
+            Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
+            List<ActualSchedule> actualASheduleList = reader.getActualESheduleFall(aRouteMR);
+            List<Date> distinctDates = reader.getDistinctDatesFall();
+
+            for (Time startA : allASchedules.keySet()){
+                Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
+                for (ActualSchedule actualSchedule : actualASheduleList){
+                    Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
+                    for (Time startTime : allSchedules.keySet()){
+                        if (startTime != null && startTime.getTime() != 0 ){
+                            if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
+                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                for (Date date : distinctDates){
+                                    if (date.equals(actualSchedule.getDate())){
+                                        varianceDateMap.put(date, variance);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                varianceTimeMap.put(startA, varianceDateMap);
+            }
+
+            // write data to other result file
+            for (Date distinctDate : distinctDates) {
+                for (Time startTime : varianceTimeMap.keySet()) {
+                    Map<Date, Double> dateMap = varianceTimeMap.get(startTime);
+                    Double variance = dateMap.get(distinctDate);
+                    varianceAtTimeWriter.println(startTime + "," + distinctDate + "," + variance);
+                }
+            }
+            varienceResultWriter.flush();
+            varianceAtTimeWriter.flush();
+            System.out.println(varianceTimeMap.size());
+        } catch (ParseException e) {
+            log.error("Error while parsing date", e);
+            throw new RuntimeException("Error while parsing date", e);
+        }
+    }
+
+    public static void calculateERouteVarianceSpring() throws Exception{
+        PrintWriter varienceResultWriter, varianceAtTimeWriter;
+        Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
+        try {
+            String resultFileLocation = IUBusUtils.getResultFolder();
+            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("spring_E");
+            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("spring_E");
+
+            File resultFolder = new File(resultFileLocation);
+            if (!resultFolder.exists()){
+                resultFolder.mkdir();
+            }
+            File varResultFile = new File(varianceResultFileName);
+            File varAtTimeResultFile = new File(varianceAtTimeFileName);
+            varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
+            varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
+            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            DataReaderERoute reader = new DataReaderERoute();
+            int aRouteMR = 361;
+            Schedule aShedule = reader.getEScheduleSpring(aRouteMR);
+            Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
+            List<ActualSchedule> actualASheduleList = reader.getActualEScheduleSpring(aRouteMR);
+            List<Date> distinctDates = reader.getDistinctDatesSpring();
+
+            for (Time startA : allASchedules.keySet()){
+                Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
+                for (ActualSchedule actualSchedule : actualASheduleList){
+                    Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
+                    for (Time startTime : allSchedules.keySet()){
+                        if (startTime != null && startTime.getTime() != 0 ){
+                            if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
+                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                for (Date date : distinctDates){
+                                    if (date.equals(actualSchedule.getDate())){
+                                        varianceDateMap.put(date, variance);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                varianceTimeMap.put(startA, varianceDateMap);
+            }
+
+            // write data to other result file
+            for (Date distinctDate : distinctDates) {
+                for (Time startTime : varianceTimeMap.keySet()) {
+                    Map<Date, Double> dateMap = varianceTimeMap.get(startTime);
+                    Double variance = dateMap.get(distinctDate);
+                    varianceAtTimeWriter.println(startTime + "," + distinctDate + "," + variance);
+                }
+            }
+            varienceResultWriter.flush();
+            varianceAtTimeWriter.flush();
+            System.out.println(varianceTimeMap.size());
+        } catch (ParseException e) {
+            log.error("Error while parsing date", e);
+            throw new RuntimeException("Error while parsing date", e);
+        }
+    }
+
+
+    public static void calculateXRouteVarianceFall() throws Exception{
+        PrintWriter varienceResultWriter, varianceAtTimeWriter;
+        Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
+        try {
+            String resultFileLocation = IUBusUtils.getResultFolder();
+            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("fall_X");
+            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("fall_X");
+
+            File resultFolder = new File(resultFileLocation);
+            if (!resultFolder.exists()){
+                resultFolder.mkdir();
+            }
+            File varResultFile = new File(varianceResultFileName);
+            File varAtTimeResultFile = new File(varianceAtTimeFileName);
+            varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
+            varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
+            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            DataReaderXRoute reader = new DataReaderXRoute();
+            int aRouteMR = 325;
+            Schedule aShedule = reader.getXSheduleFall(aRouteMR);
+            Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
+            List<ActualSchedule> actualASheduleList = reader.getActualXSheduleFall(aRouteMR);
+            List<Date> distinctDates = reader.getDistinctDatesFall();
+
+            for (Time startA : allASchedules.keySet()){
+                Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
+                for (ActualSchedule actualSchedule : actualASheduleList){
+                    Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
+                    for (Time startTime : allSchedules.keySet()){
+                        if (startTime != null && startTime.getTime() != 0 ){
+                            if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
+                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                for (Date date : distinctDates){
+                                    if (date.equals(actualSchedule.getDate())){
+                                        varianceDateMap.put(date, variance);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                varianceTimeMap.put(startA, varianceDateMap);
+            }
+
+            // write data to other result file
+            for (Date distinctDate : distinctDates) {
+                for (Time startTime : varianceTimeMap.keySet()) {
+                    Map<Date, Double> dateMap = varianceTimeMap.get(startTime);
+                    Double variance = dateMap.get(distinctDate);
+                    varianceAtTimeWriter.println(startTime + "," + distinctDate + "," + variance);
+                }
+            }
+            varienceResultWriter.flush();
+            varianceAtTimeWriter.flush();
+            System.out.println(varianceTimeMap.size());
+        } catch (ParseException e) {
+            log.error("Error while parsing date", e);
+            throw new RuntimeException("Error while parsing date", e);
+        }
+    }
+
+    public static void calculateXRouteVarianceSpring() throws Exception{
+        PrintWriter varienceResultWriter, varianceAtTimeWriter;
+        Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
+        try {
+            String resultFileLocation = IUBusUtils.getResultFolder();
+            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("spring_X");
+            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("spring_X");
+
+            File resultFolder = new File(resultFileLocation);
+            if (!resultFolder.exists()){
+                resultFolder.mkdir();
+            }
+            File varResultFile = new File(varianceResultFileName);
+            File varAtTimeResultFile = new File(varianceAtTimeFileName);
+            varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
+            varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
+            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            DataReaderXRoute reader = new DataReaderXRoute();
+            int aRouteMR = 364;
+            Schedule aShedule = reader.getXScheduleSpring(aRouteMR);
+            Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
+            List<ActualSchedule> actualASheduleList = reader.getActualXScheduleSpring(aRouteMR);
+            List<Date> distinctDates = reader.getDistinctDatesSpring();
+
+            for (Time startA : allASchedules.keySet()){
+                Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
+                for (ActualSchedule actualSchedule : actualASheduleList){
+                    Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
+                    for (Time startTime : allSchedules.keySet()){
+                        if (startTime != null && startTime.getTime() != 0 ){
+                            if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
+                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                for (Date date : distinctDates){
+                                    if (date.equals(actualSchedule.getDate())){
+                                        varianceDateMap.put(date, variance);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                varianceTimeMap.put(startA, varianceDateMap);
+            }
+
+            // write data to other result file
+            for (Date distinctDate : distinctDates) {
+                for (Time startTime : varianceTimeMap.keySet()) {
+                    Map<Date, Double> dateMap = varianceTimeMap.get(startTime);
+                    Double variance = dateMap.get(distinctDate);
+                    varianceAtTimeWriter.println(startTime + "," + distinctDate + "," + variance);
+                }
+            }
+            varienceResultWriter.flush();
+            varianceAtTimeWriter.flush();
+            System.out.println(varianceTimeMap.size());
+        } catch (ParseException e) {
+            log.error("Error while parsing date", e);
+            throw new RuntimeException("Error while parsing date", e);
+        }
+    }
+
 
     private static String getVarianceResultFileName(String prefix){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");

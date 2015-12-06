@@ -44,6 +44,19 @@ public class Constants {
         public static final String A_MR_FALL_ROUTE_TIME_TABLE = "A_Route_MR_TIME_Fall";
         public static final String A_MR_SPRING_ROUTE_TIME_TABLE = "A_Route_MR_TIME_Spring";
 
+        public static final String E_MR_SPRING_SCHEDULE_TABLE = "E_Schedule_MR_allbuses_Spring";
+        public static final String E_MR_FALL_SCHEDULE_TABLE = "E_Schedule_MR_allbuses_Fall";
+        public static final String E_MR_FALL_ROUTE_TABLE = "E_Route_MR_Fall";
+        public static final String E_MR_SPRING_ROUTE_TABLE = "E_Route_MR_Spring";
+        public static final String E_MR_FALL_ROUTE_TIME_TABLE = "E_Route_MR_TIME_Fall";
+        public static final String E_MR_SPRING_ROUTE_TIME_TABLE = "E_Route_MR_TIME_Spring";
+
+        public static final String X_MR_SPRING_SCHEDULE_TABLE = "X_Schedule_MR_allbuses_Spring";
+        public static final String X_MR_FALL_SCHEDULE_TABLE = "X_Schedule_MR_allbuses_Fall";
+        public static final String X_MR_FALL_ROUTE_TABLE = "X_Route_MR_Fall";
+        public static final String X_MR_SPRING_ROUTE_TABLE = "X_Route_MR_Spring";
+        public static final String X_MR_FALL_ROUTE_TIME_TABLE = "X_Route_MR_TIME_Fall";
+        public static final String X_MR_SPRING_ROUTE_TIME_TABLE = "X_Route_MR_TIME_Spring";
     }
 
 }
