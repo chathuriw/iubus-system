@@ -1,7 +1,9 @@
 library(RMySQL)
 
 # A route M-R
+getRouteProgression(331)
 getRouteProgression(331, 67)
+getRouteProgression(354)
 getRouteProgression(354, 67)
 
 # B route M-R
@@ -9,14 +11,13 @@ getRouteProgression(357, 24)
 getRouteProgression(318, 24)
 
 # E route M-R
-getRouteProgression(361)
-getRouteProgression(320)
+getRouteProgression(361, 62)
+getRouteProgression(320, 62)
 
 # X route M-R
-getRouteProgression(364)
-getRouteProgression(325)
-
-
+getRouteProgression(364, 76, threshold=5, TRUE)
+# Error in route 325
+getRouteProgression(325, 76, threshold=5, TRUE)
 
 
 getRouteProgression <- function(routeID, lastStop=-1,
@@ -26,7 +27,6 @@ getRouteProgression <- function(routeID, lastStop=-1,
         host='localhost')
     query = paste('SELECT * FROM intervaldata where route_id=', routeID, ';')
     Route<- dbGetQuery(mydb, query)
-    table(Route$to)
     ## only the stops that have been visited more than ~1000 times really matter
     trueStops <- as.numeric(names(table(Route$to)[which(table(Route$to) > threshold)]))
     trueStopstr <- paste(as.character(trueStops), collapse=",")
