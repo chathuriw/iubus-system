@@ -23,7 +23,8 @@ package fall2015.b565.iubus.db;
 
 import fall2015.b565.iubus.ActualSchedule;
 import fall2015.b565.iubus.Schedule;
-import fall2015.b565.iubus.utils.IuBusUtils;
+import fall2015.b565.iubus.utils.Constants;
+import fall2015.b565.iubus.utils.IUBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,19 +34,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataReader {
-    private static Logger log = LoggerFactory.getLogger(DataReader.class);
+public class DataReaderBRoute {
+    private static Logger log = LoggerFactory.getLogger(DataReaderBRoute.class);
 
-    public Schedule getASheduleFall(int routeId) throws Exception{
+    public Schedule getBSheduleFall(int routeId) throws Exception{
         Schedule schedule = new Schedule(routeId);
         Map<Time, Time[]> allSchedules = new HashMap<Time, Time[]>();
-        String connectionURL =  IuBusUtils.getJDBCUrl();
+        String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT * FROM A_Schedule_MR_allbuses_Fall";
+        String queryString = "SELECT * FROM " + Constants.TableNames.B_MR_FALL_SCHEDULE_TABLE ;
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
@@ -73,15 +74,15 @@ public class DataReader {
         }
     }
 
-    public List<ActualSchedule> getActualASheduleFall(int routeId) throws Exception{
+    public List<ActualSchedule> getActualBSheduleFall(int routeId) throws Exception{
         List<ActualSchedule> allActualSchedules = new ArrayList<ActualSchedule>();
-        String connectionURL =  IuBusUtils.getJDBCUrl();
+        String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT e.day, e.busid, e.67, e.to39, e.to1, e.to12, e.to67 FROM A_Route_MR_Fall e ORDER BY e.day, e.67";
+        String queryString = "SELECT e.day, e.busid, e.from24, e.to33, e.to6, e.to88, e.to24 FROM " + Constants.TableNames.B_MR_FALL_ROUTE_TABLE  + " e ORDER BY e.day, e.from24";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
@@ -115,13 +116,13 @@ public class DataReader {
 
     public List<Date> getDistinctDatesFall() throws Exception{
         List<Date> distinctDates = new ArrayList<Date>();
-        String connectionURL =  IuBusUtils.getJDBCUrl();
+        String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT DISTINCT(e.day) FROM A_Route_MR_Fall e ORDER BY e.day ASC";
+        String queryString = "SELECT DISTINCT(e.day) FROM " + Constants.TableNames.B_MR_FALL_ROUTE_TABLE +" e ORDER BY e.day ASC";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
@@ -146,16 +147,16 @@ public class DataReader {
         }
     }
 
-    public Schedule getASheduleSpring(int routeId) throws Exception{
+    public Schedule getBScheduleSpring(int routeId) throws Exception{
         Schedule schedule = new Schedule(routeId);
         Map<Time, Time[]> allSchedules = new HashMap<Time, Time[]>();
-        String connectionURL =  IuBusUtils.getJDBCUrl();
+        String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT * FROM A_Schedule_MR_allbuses_Spring";
+        String queryString = "SELECT * FROM " + Constants.TableNames.B_MR_SPRING_SCHEDULE_TABLE;
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
@@ -183,15 +184,15 @@ public class DataReader {
         }
     }
 
-    public List<ActualSchedule> getActualASheduleSpring(int routeId) throws Exception{
+    public List<ActualSchedule> getActualBScheduleSpring(int routeId) throws Exception{
         List<ActualSchedule> allActualSchedules = new ArrayList<ActualSchedule>();
-        String connectionURL =  IuBusUtils.getJDBCUrl();
+        String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT e.day, e.busid, e.67, e.to39, e.to1, e.to12, e.to67 FROM A_Route_MR_Spring e ORDER BY e.day, e.67";
+        String queryString = "SELECT e.day, e.busid, e.from24, e.to33, e.to6, e.to88, e.to24 FROM " + Constants.TableNames.B_MR_SPRING_ROUTE_TABLE + " e ORDER BY e.day, e.from24";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
@@ -225,13 +226,13 @@ public class DataReader {
 
     public List<Date> getDistinctDatesSpring() throws Exception{
         List<Date> distinctDates = new ArrayList<Date>();
-        String connectionURL =  IuBusUtils.getJDBCUrl();
+        String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT DISTINCT(e.day) FROM A_Route_MR_Spring e ORDER BY e.day ASC";
+        String queryString = "SELECT DISTINCT(e.day) FROM " + Constants.TableNames.B_MR_SPRING_ROUTE_TABLE +  " e ORDER BY e.day ASC";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
-            connection = DriverManager.getConnection(connectionURL, IuBusUtils.getJDBCUser(), IuBusUtils.getJDBCPWD());
+            connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
             preparedStatement = connection.prepareStatement(queryString);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){

@@ -29,4 +29,21 @@ public class Constants {
     public static final String JDBC_PWD = "jdbc.password";
     public static final String RESULT_FOLDER = "result.folder";
 
+    public class TableNames {
+        public static final String B_MR_SPRING_SCHEDULE_TABLE = "B_Schedule_MR_allbuses_Spring";
+        public static final String B_MR_FALL_SCHEDULE_TABLE = "B_Schedule_MR_allbuses_Fall";
+        public static final String B_MR_FALL_ROUTE_TABLE = "B_Route_MR_Fall";
+        public static final String B_MR_SPRING_ROUTE_TABLE = "B_Route_MR_Spring";
+        public static final String B_MR_FALL_ROUTE_TIME_TABLE = "B_Route_MR_TIME_Fall";
+        public static final String B_MR_SPRING_ROUTE_TIME_TABLE = "B_Route_MR_TIME_Spring";
+
+        public static final String A_MR_SPRING_SCHEDULE_TABLE = "A_Schedule_MR_allbuses_Spring";
+        public static final String A_MR_FALL_SCHEDULE_TABLE = "A_Schedule_MR_allbuses_Fall";
+        public static final String A_MR_FALL_ROUTE_TABLE = "A_Route_MR_Fall";
+        public static final String A_MR_SPRING_ROUTE_TABLE = "A_Route_MR_Spring";
+        public static final String A_MR_FALL_ROUTE_TIME_TABLE = "A_Route_MR_TIME_Fall";
+        public static final String A_MR_SPRING_ROUTE_TIME_TABLE = "A_Route_MR_TIME_Spring";
+
+    }
+
 }

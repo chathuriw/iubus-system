@@ -25,7 +25,7 @@ package fall2015.b565.iubus.utils;
 import java.net.URL;
 import java.util.Properties;
 
-public class IuBusUtils {
+public class IUBusUtils {
     private static Properties properties = new Properties();
 
     public static String getJDBCUrl(){
@@ -63,6 +63,6 @@ public class IuBusUtils {
     }
 
     private static URL getPropertyFileURL() {
-        return IuBusUtils.class.getClassLoader().getResource(Constants.IUBUS_PROPERTIES);
+        return IUBusUtils.class.getClassLoader().getResource(Constants.IUBUS_PROPERTIES);
     }
 }
