@@ -21,10 +21,7 @@
 
 package fall2015.b565.iubus;
 
-import fall2015.b565.iubus.db.DataReaderARoute;
-import fall2015.b565.iubus.db.DataReaderBRoute;
-import fall2015.b565.iubus.db.DataReaderERoute;
-import fall2015.b565.iubus.db.DataReaderXRoute;
+import fall2015.b565.iubus.db.*;
 import fall2015.b565.iubus.utils.IUBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,49 +41,14 @@ import java.util.Map;
 public class ScheduleVarience {
     private static Logger log = LoggerFactory.getLogger(ScheduleVarience.class);
     public static void main(String[] args) throws Exception{
-        calculateARouteVarianceFall();
+//        calculateARouteVarianceFall();
         calculateARouteVarianceSpring();
-        calculateBRouteVarianceFall();
-        calculateBRouteVarianceSpring();
-        calculateERouteVarianceFall();
-        calculateERouteVarianceSpring();
-        calculateXRouteVarianceFall();
-        calculateXRouteVarianceSpring();
-//        PrintWriter varienceResultWriter;
-//        try {
-//            String resultFileLocation = IuBusUtils.getResultFolder();
-//            String varianceResultFileName = resultFileLocation + getVarianceResultFileName();
-//
-//            File resultFolder = new File(resultFileLocation);
-//            if (!resultFolder.exists()){
-//                resultFolder.mkdir();
-//            }
-//            File varResultFile = new File(varianceResultFileName);
-//            varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
-//            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
-//            DataReader reader = new DataReader();
-//            int aRouteMR = 331;
-//            Schedule aShedule = reader.getASheduleFall(aRouteMR);
-//            Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
-//            List<ActualSchedule> actualASheduleList = reader.getActualBSheduleFall(aRouteMR);
-//            for (ActualSchedule actualSchedule : actualASheduleList){
-//                Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
-//                for (Time startTime : allSchedules.keySet()){
-//                    for (Time startA : allASchedules.keySet()){
-//                        if (startTime.getTime() != 0 ){
-//                            if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-//                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-//                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//            varienceResultWriter.flush();
-//        } catch (ParseException e) {
-//            log.error("Error while parsing date", e);
-//            throw new RuntimeException("Error while parsing date", e);
-//        }
+//        calculateBRouteVarianceFall();
+//        calculateBRouteVarianceSpring();
+//        calculateERouteVarianceFall();
+//        calculateERouteVarianceSpring();
+//        calculateXRouteVarianceFall();
+//        calculateXRouteVarianceSpring();
     }
 
 
@@ -106,8 +68,10 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderARoute reader = new DataReaderARoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
+
             int aRouteMR = 331;
             Schedule aShedule = reader.getASheduleFall(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -115,14 +79,21 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesFall();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getAFallMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
+
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -168,8 +139,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderARoute reader = new DataReaderARoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int aRouteMR = 354;
             Schedule aShedule = reader.getASheduleSpring(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -177,6 +149,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesSpring();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getASpringMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -184,7 +157,11 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -230,8 +207,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderBRoute reader = new DataReaderBRoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int bRouteMR = 318;
             Schedule bSheduleFall = reader.getBSheduleFall(bRouteMR);
             Map<Time, Time[]> allASchedules = bSheduleFall.getAllSchedules();
@@ -239,6 +217,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesFall();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getBFallMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -246,7 +225,12 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -292,8 +276,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderBRoute reader = new DataReaderBRoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int bRouteMR = 357;
             Schedule aShedule = reader.getBScheduleSpring(bRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -301,6 +286,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesSpring();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getBSpringMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -308,7 +294,12 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -355,8 +346,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderERoute reader = new DataReaderERoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int aRouteMR = 320;
             Schedule aShedule = reader.getESheduleFall(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -364,6 +356,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesFall();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getEFallMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -371,7 +364,12 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -417,8 +415,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderERoute reader = new DataReaderERoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int aRouteMR = 361;
             Schedule aShedule = reader.getEScheduleSpring(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -426,6 +425,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesSpring();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getESpringMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -433,7 +433,12 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -480,8 +485,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderXRoute reader = new DataReaderXRoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int aRouteMR = 325;
             Schedule aShedule = reader.getXSheduleFall(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -489,6 +495,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesFall();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getXFallMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -496,7 +503,12 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);
@@ -542,8 +554,9 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date, Start Time Schedule, Start Time Actual, Variance ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
             DataReaderXRoute reader = new DataReaderXRoute();
+            DataReaderRidership readerARidership = new DataReaderRidership();
             int aRouteMR = 364;
             Schedule aShedule = reader.getXScheduleSpring(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
@@ -551,6 +564,7 @@ public class ScheduleVarience {
             List<Date> distinctDates = reader.getDistinctDatesSpring();
 
             for (Time startA : allASchedules.keySet()){
+                List<Ridership> ridershipForGivenStartTime = readerARidership.getXSpringMRRidershipForGivenStartTime(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
@@ -558,7 +572,12 @@ public class ScheduleVarience {
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
-                                varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance);
+                                // find total ridership for given starting time
+                                for (Ridership ridership : ridershipForGivenStartTime){
+                                    if (ridership.getDate().equals(actualSchedule.getDate())){
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                    }
+                                }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
                                         varianceDateMap.put(date, variance);

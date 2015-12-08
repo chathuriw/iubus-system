@@ -21,42 +21,5 @@
 
 package fall2015.b565.iubus;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.util.Map;
-
-public class ActualSchedule {
-    private int route;
-    private Date date;
-    private int totalRidership;
-    private Map<Time, Time[]> allSchedules;
-
-    public ActualSchedule(int route, Date date) {
-        this.route = route;
-        this.date = date;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public int getRoute() {
-        return route;
-    }
-
-    public void setRoute(int route) {
-        this.route = route;
-    }
-
-    public Map<Time, Time[]> getAllSchedules() {
-        return allSchedules;
-    }
-
-    public void setAllSchedules(Map<Time, Time[]> allSchedules) {
-        this.allSchedules = allSchedules;
-    }
+public class ScheduleRidership {
 }

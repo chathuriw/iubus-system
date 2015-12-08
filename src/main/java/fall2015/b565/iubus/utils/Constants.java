@@ -57,6 +57,16 @@ public class Constants {
         public static final String X_MR_SPRING_ROUTE_TABLE = "X_Route_MR_Spring";
         public static final String X_MR_FALL_ROUTE_TIME_TABLE = "X_Route_MR_TIME_Fall";
         public static final String X_MR_SPRING_ROUTE_TIME_TABLE = "X_Route_MR_TIME_Spring";
+
+        public static final String A_MR_FALL_RIDERSHIP_TABLE = "A_Route_Ridership_Fall";
+        public static final String A_MR_SPRING_RIDERSHIP_TABLE = "A_Route_Ridership_Spring";
+        public static final String B_MR_FALL_RIDERSHIP_TABLE = "B_Route_Ridership_Fall";
+        public static final String B_MR_SPRING_RIDERSHIP_TABLE = "B_Route_Ridership_Spring";
+        public static final String E_MR_FALL_RIDERSHIP_TABLE = "E_Route_Ridership_Fall";
+        public static final String E_MR_SPRING_RIDERSHIP_TABLE = "E_Route_Ridership_Spring";
+        public static final String X_MR_FALL_RIDERSHIP_TABLE = "X_Route_Ridership_Fall";
+        public static final String X_MR_SPRING_RIDERSHIP_TABLE = "X_Route_Ridership_Spring";
+
     }
 
 }
