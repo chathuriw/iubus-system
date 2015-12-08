@@ -153,7 +153,7 @@ public class DataReaderARoute {
         String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
         String queryString = "SELECT * FROM " + Constants.TableNames.A_MR_SPRING_SCHEDULE_TABLE;
-        System.out.println(queryString);
+//        System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
             connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());

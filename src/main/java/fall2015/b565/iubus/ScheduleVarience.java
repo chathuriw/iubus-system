@@ -41,14 +41,14 @@ import java.util.Map;
 public class ScheduleVarience {
     private static Logger log = LoggerFactory.getLogger(ScheduleVarience.class);
     public static void main(String[] args) throws Exception{
-//        calculateARouteVarianceFall();
+        calculateARouteVarianceFall();
         calculateARouteVarianceSpring();
-//        calculateBRouteVarianceFall();
-//        calculateBRouteVarianceSpring();
-//        calculateERouteVarianceFall();
-//        calculateERouteVarianceSpring();
-//        calculateXRouteVarianceFall();
-//        calculateXRouteVarianceSpring();
+        calculateBRouteVarianceFall();
+        calculateBRouteVarianceSpring();
+        calculateERouteVarianceFall();
+        calculateERouteVarianceSpring();
+        calculateXRouteVarianceFall();
+        calculateXRouteVarianceSpring();
     }
 
 

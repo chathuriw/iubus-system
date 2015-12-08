@@ -200,7 +200,7 @@ public class DataReaderRidership {
         String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
         String queryString = "SELECT * FROM " + Constants.TableNames.A_MR_SPRING_RIDERSHIP_TABLE + " e where e.dayOfWeek > 1 and e.dayOfWeek < 6  AND e.startingTime = '" + startTime + "'";
-        System.out.println(queryString);
+//        System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
             connection = DriverManager.getConnection(connectionURL, IUBusUtils.getJDBCUser(), IUBusUtils.getJDBCPWD());
