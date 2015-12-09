@@ -68,15 +68,17 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderARoute reader = new DataReaderARoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
 
             int aRouteMR = 331;
             Schedule aShedule = reader.getASheduleFall(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualASheduleFall(aRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesFall();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllFallWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getAFallMRRidershipForGivenStartTime(startA);
@@ -91,7 +93,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
                                     }
                                 }
                                 for (Date date : distinctDates){
@@ -139,14 +142,16 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderARoute reader = new DataReaderARoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int aRouteMR = 354;
             Schedule aShedule = reader.getASheduleSpring(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualASheduleSpring(aRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesSpring();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllSpringWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getASpringMRRidershipForGivenStartTime(startA);
@@ -159,8 +164,8 @@ public class ScheduleVarience {
                                 double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
@@ -207,13 +212,15 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderBRoute reader = new DataReaderBRoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int bRouteMR = 318;
             Schedule bSheduleFall = reader.getBSheduleFall(bRouteMR);
             Map<Time, Time[]> allASchedules = bSheduleFall.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualBSheduleFall(bRouteMR);
+            Map<Date, Weather> allFallWeather = readerWeather.getAllFallWeather();
             List<Date> distinctDates = reader.getDistinctDatesFall();
 
             for (Time startA : allASchedules.keySet()){
@@ -228,8 +235,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
@@ -276,14 +283,16 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderBRoute reader = new DataReaderBRoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int bRouteMR = 357;
             Schedule aShedule = reader.getBScheduleSpring(bRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualBScheduleSpring(bRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesSpring();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllSpringWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getBSpringMRRidershipForGivenStartTime(startA);
@@ -297,8 +306,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
@@ -346,14 +355,16 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderERoute reader = new DataReaderERoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int aRouteMR = 320;
             Schedule aShedule = reader.getESheduleFall(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualESheduleFall(aRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesFall();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllFallWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getEFallMRRidershipForGivenStartTime(startA);
@@ -367,8 +378,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
@@ -415,14 +426,16 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderERoute reader = new DataReaderERoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int aRouteMR = 361;
             Schedule aShedule = reader.getEScheduleSpring(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualEScheduleSpring(aRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesSpring();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllSpringWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getESpringMRRidershipForGivenStartTime(startA);
@@ -436,8 +449,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
@@ -485,14 +498,16 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderXRoute reader = new DataReaderXRoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int aRouteMR = 325;
             Schedule aShedule = reader.getXSheduleFall(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualXSheduleFall(aRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesFall();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllFallWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getXFallMRRidershipForGivenStartTime(startA);
@@ -506,8 +521,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
@@ -554,14 +569,16 @@ public class ScheduleVarience {
             File varAtTimeResultFile = new File(varianceAtTimeFileName);
             varienceResultWriter = new PrintWriter(varResultFile, "UTF-8");
             varianceAtTimeWriter = new PrintWriter(varAtTimeResultFile, "UTF-8");
-            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership ");
+            varienceResultWriter.println("Date,Start Time Schedule,Start Time Actual,Variance,Inbound,Outbound,TotalRidership,TotalPrecipitation");
             DataReaderXRoute reader = new DataReaderXRoute();
             DataReaderRidership readerARidership = new DataReaderRidership();
+            DataReaderWeather readerWeather = new DataReaderWeather();
             int aRouteMR = 364;
             Schedule aShedule = reader.getXScheduleSpring(aRouteMR);
             Map<Time, Time[]> allASchedules = aShedule.getAllSchedules();
             List<ActualSchedule> actualASheduleList = reader.getActualXScheduleSpring(aRouteMR);
             List<Date> distinctDates = reader.getDistinctDatesSpring();
+            Map<Date, Weather> allFallWeather = readerWeather.getAllSpringWeather();
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getXSpringMRRidershipForGivenStartTime(startA);
@@ -575,8 +592,8 @@ public class ScheduleVarience {
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal());
-                                    }
+                                        Weather weather = allFallWeather.get(actualSchedule.getDate());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
