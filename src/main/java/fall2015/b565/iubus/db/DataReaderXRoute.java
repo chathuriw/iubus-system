@@ -78,7 +78,7 @@ public class DataReaderXRoute {
         List<ActualSchedule> allActualSchedules = new ArrayList<ActualSchedule>();
         String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT e.day, e.busid, e.from76, e.to64, e.to76 FROM " + Constants.TableNames.X_MR_FALL_ROUTE_TABLE  + " e ORDER BY e.day, e.from76";
+        String queryString = "SELECT e.day, e.busid, e.to118, e.to64, e.to76 FROM " + Constants.TableNames.X_MR_FALL_ROUTE_TABLE  + " e ORDER BY e.day, e.to118";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
@@ -188,7 +188,7 @@ public class DataReaderXRoute {
         List<ActualSchedule> allActualSchedules = new ArrayList<ActualSchedule>();
         String connectionURL =  IUBusUtils.getJDBCUrl();
         Connection connection = null;
-        String queryString = "SELECT e.day, e.busid, e.from76, e.to64, e.to76 FROM " + Constants.TableNames.X_MR_SPRING_ROUTE_TABLE + " e ORDER BY e.day, e.from76";
+        String queryString = "SELECT e.day, e.busid, e.to118, e.to64, e.to76 FROM " + Constants.TableNames.X_MR_SPRING_ROUTE_TABLE + " e ORDER BY e.day, e.to118";
         System.out.println(queryString);
         PreparedStatement preparedStatement = null;
         try {
