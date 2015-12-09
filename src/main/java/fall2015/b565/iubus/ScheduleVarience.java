@@ -82,24 +82,37 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getAFallMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
-
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                     }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -155,21 +168,34 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getASpringMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -225,22 +251,35 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getBFallMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -296,22 +335,35 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getBSpringMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -368,22 +420,35 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getEFallMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -439,22 +504,35 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getESpringMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -511,22 +589,35 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getXFallMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null ){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
@@ -582,22 +673,35 @@ public class ScheduleVarience {
 
             for (Time startA : allASchedules.keySet()){
                 List<Ridership> ridershipForGivenStartTime = readerARidership.getXSpringMRRidershipForGivenStartTime(startA);
+                Time[] restOfScheduleTime = allASchedules.get(startA);
                 Map<Date, Double> varianceDateMap = new HashMap<Date, Double>();
                 for (ActualSchedule actualSchedule : actualASheduleList){
                     Map<Time, Time[]> allSchedules = actualSchedule.getAllSchedules();
                     for (Time startTime : allSchedules.keySet()){
                         if (startTime != null && startTime.getTime() != 0 ){
                             if (startA.getTime() <= (startTime.getTime() + 5*1000*60) && startA.getTime() >= (startTime.getTime() - 10*1000*60)){
-                                double variance = (startTime.getTime() - startA.getTime())/(1000.0*60);
+                                Time[] restOfTheTimes = allSchedules.get(startTime);
+                                double startTimeVariance = (startTime.getTime() - startA.getTime())/(1000.0*60);
                                 // find total ridership for given starting time
                                 for (Ridership ridership : ridershipForGivenStartTime){
                                     if (ridership.getDate().equals(actualSchedule.getDate())){
                                         Weather weather = allFallWeather.get(actualSchedule.getDate());
-                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + variance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());                                    }
+                                        varienceResultWriter.println(actualSchedule.getDate() + "," + startA + "," + startTime + "," + startTimeVariance + "," + ridership.getInbound() + "," + ridership.getOutbound() + "," + ridership.getTotal() + "," + weather.getPrecipitation());
+                                        if (restOfTheTimes != null ){
+                                            for (int i =0; i < restOfTheTimes.length; i++){
+                                                if (restOfScheduleTime[i] != null && !restOfScheduleTime[i].toString().equals("00:00:00")){
+                                                    if (restOfTheTimes[i] != null && !restOfTheTimes[i].toString().equals("00:00:00")){
+                                                        double restScheduleTimeVariance = (restOfTheTimes[i].getTime() - restOfScheduleTime[i].getTime())/(1000.0*60);
+                                                        varienceResultWriter.println(actualSchedule.getDate() + "," + restOfScheduleTime[i] + "," + restOfTheTimes[i] + "," + restScheduleTimeVariance + ",NA, NA, NA,"  + weather.getPrecipitation());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                                 for (Date date : distinctDates){
                                     if (date.equals(actualSchedule.getDate())){
-                                        varianceDateMap.put(date, variance);
+                                        varianceDateMap.put(date, startTimeVariance);
                                     }
                                 }
                             }
