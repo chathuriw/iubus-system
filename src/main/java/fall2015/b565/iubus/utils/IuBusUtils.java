@@ -22,7 +22,11 @@
 package fall2015.b565.iubus.utils;
 
 
+import java.io.File;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Properties;
 
 public class IUBusUtils {
@@ -50,7 +54,12 @@ public class IUBusUtils {
 
     public static String getResultFolder (){
         loadProperties();
-        return properties.getProperty(Constants.RESULT_FOLDER);
+        String baseFolder = properties.getProperty(Constants.RESULT_FOLDER);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String date = dateFormat.format(cal.getTime());
+        baseFolder = baseFolder + File.separator + date + File.separator;
+        return baseFolder;
     }
 
     private static void loadProperties() {
