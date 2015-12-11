@@ -22,6 +22,7 @@
 package fall2015.b565.iubus;
 
 import fall2015.b565.iubus.db.*;
+import fall2015.b565.iubus.utils.Constants;
 import fall2015.b565.iubus.utils.IUBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,14 +42,30 @@ import java.util.Map;
 public class ScheduleVarience {
     private static Logger log = LoggerFactory.getLogger(ScheduleVarience.class);
     public static void main(String[] args) throws Exception{
-        calculateARouteVarianceFall();
-        calculateARouteVarianceSpring();
-        calculateBRouteVarianceFall();
-        calculateBRouteVarianceSpring();
-        calculateERouteVarianceFall();
-        calculateERouteVarianceSpring();
-        calculateXRouteVarianceFall();
-        calculateXRouteVarianceSpring();
+        String query1 = IUBusUtils.generateAQueryBetweenStops(Constants.TableNames.A_MR_FALL_ROUTE_TIME_TABLE);
+        String query2 = IUBusUtils.generateAQueryBetweenStops(Constants.TableNames.A_MR_SPRING_ROUTE_TIME_TABLE);
+        String query3 = IUBusUtils.generateBQueryBetweenStops(Constants.TableNames.B_MR_FALL_ROUTE_TIME_TABLE);
+        String query4 = IUBusUtils.generateBQueryBetweenStops(Constants.TableNames.B_MR_SPRING_ROUTE_TIME_TABLE);
+        String query5 = IUBusUtils.generateEQueryBetweenStops(Constants.TableNames.E_MR_FALL_ROUTE_TIME_TABLE);
+        String query6 = IUBusUtils.generateEQueryBetweenStops(Constants.TableNames.E_MR_SPRING_ROUTE_TIME_TABLE);
+        String query7 = IUBusUtils.generateXQueryBetweenStops(Constants.TableNames.X_MR_FALL_ROUTE_TIME_TABLE);
+        String query8 = IUBusUtils.generateXQueryBetweenStops(Constants.TableNames.X_MR_SPRING_ROUTE_TIME_TABLE);
+        System.out.println(query1);
+        System.out.println(query2);
+        System.out.println(query3);
+        System.out.println(query4);
+        System.out.println(query5);
+        System.out.println(query6);
+        System.out.println(query7);
+        System.out.println(query8);
+//        calculateARouteVarianceFall();
+//        calculateARouteVarianceSpring();
+//        calculateBRouteVarianceFall();
+//        calculateBRouteVarianceSpring();
+//        calculateERouteVarianceFall();
+//        calculateERouteVarianceSpring();
+//        calculateXRouteVarianceFall();
+//        calculateXRouteVarianceSpring();
     }
 
 

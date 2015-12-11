@@ -69,7 +69,6 @@ public class Constants {
 
         public static final String FALL_WEATHER_TABLE = "ridership_weather_fall_2014";
         public static final String SPRING_WEATHER_TABLE = "ridership_weather_spring_2015";
-
     }
 
 }
