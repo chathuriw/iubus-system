@@ -29,7 +29,7 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataReaderATime {
+public class DataReaderTime {
     private static Logger log = LoggerFactory.getLogger(DataReaderARoute.class);
 
     public Map<String, Double> getAvgDwelTimes(String queryString) throws Exception{
@@ -44,6 +44,11 @@ public class DataReaderATime {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
                 while (resultSet.next()) {
+                    ResultSetMetaData rsmd = resultSet.getMetaData();
+                    int columnCount = rsmd.getColumnCount();
+                    for (int i =1; i <= columnCount; i++){
+                        avgDwellTimes.put(rsmd.getColumnName(i), resultSet.getDouble(i));
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -75,6 +80,11 @@ public class DataReaderATime {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet != null){
                 while (resultSet.next()) {
+                    ResultSetMetaData rsmd = resultSet.getMetaData();
+                    int columnCount = rsmd.getColumnCount();
+                    for (int i =1; i <= columnCount; i++){
+                        avgDwellTimes.put(rsmd.getColumnName(i), resultSet.getDouble(i));
+                    }
                 }
             }
         } catch (SQLException e) {
