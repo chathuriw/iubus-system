@@ -5,10 +5,10 @@ import MySQLdb
 
 ######################################################################
 # ########## A Route M-R
-primary_routeID = 331
-secondary_routeID = 354
-stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
-         11, 12, 13, 14, 36, 30, 34, 35, 67]
+# primary_routeID = 331
+# secondary_routeID = 354
+# stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
+#          11, 12, 13, 14, 36, 30, 34, 35, 67]
 
 # ########## B Route M-R
 # primary_routeID = 357
@@ -23,9 +23,10 @@ stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
 #          12, 13, 14,  1, 55, 57, 58, 59, 107, 61, 62]
 
 # ########## X Route M-R
-# primary_routeID = 325
-# secondary_routeID = -1
-# stops = [118, 64, 78, 76]
+primary_routeID = 364
+secondary_routeID = 364
+# secondary_routeID = 325
+stops = [118, 64, 78, 76]
 ######################################################################
 # secondary_routeID should have the same stops as primary_routeID
 # script will ignore secondary_routeID if it == -1
@@ -35,7 +36,7 @@ stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
 DEBUG = False
 
 # global variable. True: connect to shared MySQL database, false: Bo's db
-REMOTE = False
+REMOTE = True
 
 # where do we want to write the output?
 OUTFILE_DIR = "..\\data\\"   # Windows

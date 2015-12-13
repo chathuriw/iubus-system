@@ -28,6 +28,7 @@ import java.util.Map;
 public class ActualSchedule {
     private int route;
     private Date date;
+    private int totalRidership;
     private Map<Time, Time[]> allSchedules;
 
     public ActualSchedule(int route, Date date) {
