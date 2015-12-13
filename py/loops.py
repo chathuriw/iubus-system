@@ -30,24 +30,29 @@ stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
 # secondary_routeID should have the same stops as primary_routeID
 # script will ignore secondary_routeID if it == -1
 
-# global variable used to keep track of DEBUG == False output
-newrow_i = 0
-# global variable. True: verbose output, False: minimal output
+# global variable. True: verbose output + limited data
+#                  False: minimal output + all data
 DEBUG = False
+
 # global variable. True: connect to shared MySQL database, false: Bo's db
 REMOTE = False
+
+# where do we want to write the output?
+OUTFILE_DIR = "..\\data\\"   # Windows
+# OUTFILE_DIR = "../data/"     # Linux (and Apple?)
 
 
 def main(argv):
     # get our global variables
     global DEBUG
     global REMOTE
+    global OUTFILE_DIR
     global stops
     global primary_routeID
     global secondary_routeID
     nstops = len(stops) - 1
-    # default: accept 18 or fewer blank columns (there are only 18 columns)
-    tau = 18
+    # default: accept 17 or fewer blank columns (there are 18 columns)
+    tau = 16
 
     # process command line arguments.
     try:
@@ -122,8 +127,8 @@ def main(argv):
         print output
 
     # write the column names to an output file
-    fout_when = open(outfile_name + "_when.csv", 'w')
-    fout_time = open(outfile_name + "_time.csv", 'w')
+    fout_when = open(OUTFILE_DIR + outfile_name + "_when.csv", 'w')
+    fout_time = open(OUTFILE_DIR + outfile_name + "_time.csv", 'w')
     fout_when.write(output + "\n")
     fout_time.write(output + "\n")
 
@@ -222,6 +227,10 @@ def getTime(datetime):
     timeout = timeout + ":"
     timeout = timeout + maybeAddZero(datetime.second)
     return timeout
+
+
+# global variable used to keep track of DEBUG == False output
+newrow_i = 0
 
 
 # add the date and bus id to a new row, prints progress if DEBUG == False
