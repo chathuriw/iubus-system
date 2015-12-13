@@ -7,8 +7,8 @@ getRouteProgression(354)
 getRouteProgression(354, 67)
 
 # B route M-R
-getRouteProgression(357, 24)
-getRouteProgression(318, 24)
+getRouteProgression(357, 24, TRUE)
+getRouteProgression(318, 24, TRUE)
 
 # E route M-R
 getRouteProgression(361, 62)
@@ -30,6 +30,9 @@ getRouteProgression <- function(routeID, lastStop=-1,
     ## only the stops that have been visited more than ~1000 times really matter
     trueStops <- as.numeric(names(table(Route$to)[which(table(Route$to) > threshold)]))
     trueStopstr <- paste(as.character(trueStops), collapse=",")
+    if(verbose){
+        print(paste("True stops: ", trueStopstr))
+    }
     if(lastStop == "-1"){
         print("choose the last stop and try again:")
         dbDisconnect(mydb)
