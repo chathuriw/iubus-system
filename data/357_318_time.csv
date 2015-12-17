@@ -1,4 +1,4 @@
-day,busid,to25,from25,to26,from26,to27,from27,to28,from28,to29,from29,to31,from31,to33,from33,to4,from4,to6,from6,to8,from8,to10,from10,to87,from87,to88,from88,to16,from16,to75,from75,to20,from20,to21,from21,to22,from22,to23,from23,to24,from24
+day,busid,Travelto25,Dwell25,Travelto26,Dwell26,Travelto27,Dwell27,Travelto28,Dwell28,Travelto29,Dwell29,Travelto31,Dwell31,Travelto33,Dwell33,Travelto4,Dwell4,Travelto6,Dwell6,Travelto8,Dwell8,Travelto10,Dwell10,Travelto87,Dwell87,Travelto88,Dwell88,Travelto16,Dwell16,Travelto75,Dwell75,Travelto20,Dwell20,Travelto21,Dwell21,Travelto22,Dwell22,Travelto23,Dwell23,Travelto24,Dwell24
 2014-08-26,636,,10,23,45,57,52,64,43,71,30,58,29,67,62,326,52,175,45,76,38,115,54,333,71,113,40,84,9,33,10,60,12,18,13,24,28,40,9,22,41
 2014-08-28,636,,,,,,,,,,,,,,26,65,35,76,32,58,42,79,35,,,,,,,,,,,,,,,,,
 2014-09-03,636,,29,40,36,46,35,44,14,62,26,44,25,80,34,67,46,131,29,55,27,57,18,248,35,76,46,77,8,31,7,48,7,11,7,16,11,21,28,41,599

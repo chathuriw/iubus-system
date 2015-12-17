@@ -5,10 +5,10 @@ import MySQLdb
 
 ######################################################################
 # ########## A Route M-R
-primary_routeID = 331
-secondary_routeID = 354
-stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
-         11, 12, 13, 14, 36, 30, 34, 35, 67]
+# primary_routeID = 331
+# secondary_routeID = 354
+# stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
+#          11, 12, 13, 14, 36, 30, 34, 35, 67]
 
 # ########## B Route M-R
 # primary_routeID = 357
@@ -23,10 +23,10 @@ stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
 #          12, 13, 14,  1, 55, 57, 58, 59, 107, 61, 62]
 
 # ########## X Route M-R
-# Don't use routeID 364, stops are poorly defined
-# primary_routeID = 325
-# secondary_routeID = -1
-# stops = [118, 64, 78, 76]
+# routeID 364 is weird, watch out
+primary_routeID = 325
+secondary_routeID = -1
+stops = [118, 64, 78, 76]
 
 ######################################################################
 # secondary_routeID should have the same stops as primary_routeID
@@ -124,18 +124,26 @@ def main(argv):
         print "Fatal Error: couldn't connect to database"
         sys.exit()
 
-    # output = the header line of the output csv
-    output = "day,busid"
+    # when_output = the header line of the when_output csv
+    when_output = "day,busid"
     for n in stops:
-        output = output + ",to" + str(n) + ",from" + str(n)
+        when_output = when_output + ",ArriveAt" + str(n) +\
+            ",LeaveFrom" + str(n)
     if DEBUG:
-        print output
+        print "when output:", when_output
+
+    # time_output = the header line of the time_output csv
+    time_output = "day,busid"
+    for n in stops:
+        time_output = time_output + ",Travelto" + str(n) + ",Dwell" + str(n)
+    if DEBUG:
+        print "time output:", time_output
 
     # write the column names to an output file
     fout_when = open(OUTFILE_DIR + outfile_name + "_when.csv", 'w')
     fout_time = open(OUTFILE_DIR + outfile_name + "_time.csv", 'w')
-    fout_when.write(output + "\n")
-    fout_time.write(output + "\n")
+    fout_when.write(when_output + "\n")
+    fout_time.write(time_output + "\n")
 
     # clear the column names from output and initialize loop variables
     when_output = ""

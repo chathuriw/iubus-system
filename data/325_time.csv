@@ -1,4 +1,4 @@
-day,busid,to118,from118,to64,from64,to78,from78,to76,from76
+day,busid,Travelto118,Dwell118,Travelto64,Dwell64,Travelto78,Dwell78,Travelto76,Dwell76
 2014-10-16,636,,32,55,48,84,34,789,197
 2014-10-16,636,580,38,57,28,58,41,357,632
 2014-10-16,636,948,19,54,40,69,26,783,86
