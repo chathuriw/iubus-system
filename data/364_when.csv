@@ -1,4 +1,4 @@
-day,busid,to118,from118,to64,from64,to78,from78,to76,from76
+day,busid,ArriveAt118,LeaveFrom118,ArriveAt64,LeaveFrom64,ArriveAt78,LeaveFrom78,ArriveAt76,LeaveFrom76
 2015-03-09,636,,,,,,,,08:56:44
 2015-03-09,636,09:01:55,09:02:51,09:03:23,09:04:25,09:05:02,09:05:35,09:11:28,09:12:17
 2015-03-09,636,,,,,,,,09:28:19
