@@ -1,9 +1,39 @@
-## Custom functions ########################################333
+## Custom functions ########################################
+library(chron)
+
+# function for determining average ridership and variance in good and bad weather
+getAvgVariance <- function(df) 
+{
+    result.df <- data.frame(Time = 0, Num.Days = 0, Avg.Var = 0, Avg.Ridership = 0,   
+                            Avg.Var.Good.W = 0, Avg.Ridership.Good.W = 0, Avg.Var.Bad.W = 0, Avg.Ridership.Bad.W = 0)
+    sched.times <- sort(unique(df$Sched.Time))
+    for (time in sched.times) 
+    {
+        temp.df <- df[df$Sched.Time == time,]
+        num.days <- nrow(temp.df)
+        avg.riders.total <- mean(temp.df$TotalRidership, na.rm =TRUE)
+        avg.var.total <- mean(temp.df$Variance)
+        
+        precip.split <- split(temp.df, cut(temp.df$TotalPrecipitation, c(-100,.025,100), include.lowest=TRUE))
+        avg.ridership.good.w <- mean(as.numeric(precip.split[[1]]$TotalRidership), na.rm=TRUE)
+        avg.ridership.bad.w <- mean(as.numeric(precip.split[[2]]$TotalRidership), na.rm=TRUE)
+        avg.var.good.w <- mean(as.numeric(precip.split[[1]]$Variance), na.rm=TRUE)
+        avg.var.bad.w <- mean(as.numeric(precip.split[[2]]$Variance), na.rm=TRUE)
+        new.row <- c(time, num.days, avg.var.total, avg.riders.total, 
+                     avg.var.good.w, avg.ridership.good.w, avg.var.bad.w, avg.ridership.bad.w)
+        # print(new.row)
+        result.df <- rbind(result.df, new.row)
+        #print(head(result.df))
+    }
+    return(result.df)
+}
+
+
 # function to get the mean ridership when precipitation is above and below a threshold
 precipMean <- function(df, precThres) {
     zero <- NULL
     great_zero <- NULL
-    PrecipMeans <- data.frame(NoPrecip = 0, Precip = 0)
+    PrecipMeans <- data.frame(NoPrecip.Mean = 0, NoPrecip.SD = 0, Precip.Mean = 0, Precip.SD = 0)
     for (i in 1:nrow(df)) {
         row <- df[i,]
         if ((row$PrecipTotal == "0") | (grepl("T", row$PrecipTotal)) | (row$PrecipTotal < precThres)) {
@@ -13,8 +43,12 @@ precipMean <- function(df, precThres) {
             great_zero <- append(great_zero, row$Ridership)
         }
     }
-    PrecipMeans$NoPrecip = mean(zero, na.rm =TRUE)
-    PrecipMeans$Precip = mean(great_zero, na.rm =TRUE)    
+    PrecipMeans$NoPrecip.Mean = mean(zero, na.rm =TRUE)
+    PrecipMeans$NoPrecip.SD = sd(zero, na.rm =TRUE)
+    PrecipMeans$NoPrecip.error = 1.96 * sd(zero, na.rm =TRUE) / sqrt(length(zero))
+    PrecipMeans$Precip.Mean = mean(great_zero, na.rm =TRUE)    
+    PrecipMeans$Precip.SD = sd(great_zero, na.rm =TRUE) 
+    PrecipMeans$Precip.error = 1.96 * sd(great_zero, na.rm =TRUE) / sqrt(length(great_zero))
     return(PrecipMeans)
 }
 ####
@@ -137,13 +171,138 @@ mtwr
 # Start with splitting below and above freezing
 mtwr_freeze <- split(MTWR, cut(as.numeric(MTWR$Tavg), c(-100,32,100), include.lowest=TRUE))
 mean(mtwr_freeze$`[-100,32]`$Ridership, na.rm=TRUE)
+sd3.a <- sd(mtwr_freeze$`[-100,32]`$Ridership, na.rm=TRUE)
+l3.a <- length(na.omit(mtwr_freeze$`[-100,32]`$Ridership))
 # 18968.69
 mean(mtwr_freeze$`(32,100]`$Ridership, na.rm=TRUE)
+sd3.b <- sd(mtwr_freeze$`(32,100]`$Ridership, na.rm=TRUE)
+l3.b <- length(na.omit(mtwr_freeze$`(32,100]`$Ridership))
 # 17226.84
 # not surprising results. Rideship increased 9.18 % when the average temperature for the day was below freezing
 
 
+
+means <- precipMean(MTWR, .025)
+#   NoPrecip.Mean NoPrecip.SD Precip.Mean Precip.SD NoPrecip.error Precip.error
+#     17452.11    3558.608    18324.07  2039.477       701.0009     495.8134
+means.F <- precipMean(Fr, .025)
 ###########################################################
 # example of finding substring in weather codes
-test <- f14$CodeSum[1]
-grep("FG", test) # returns integer which is starting position in string
+# test <- f14$CodeSum[1]
+# grep("FG", test) # returns integer which is starting position in string
+
+
+# reading in new .csv files for further processing and getting avg variance times
+
+af <- read.csv("results_a_route_fall.csv", header=TRUE, stringsAsFactors = FALSE)
+as <- read.csv("results_a_route_spring.csv", header=TRUE, stringsAsFactors = FALSE)
+bf <- read.csv("results_b_route_fall.csv", header=TRUE, stringsAsFactors = FALSE)
+bs <- read.csv("results_b_route_spring.csv", header=TRUE, stringsAsFactors = FALSE)
+ef <- read.csv("results_e_route_fall.csv", header=TRUE, stringsAsFactors = FALSE)
+es <- read.csv("results_e_route_spring.csv", header=TRUE, stringsAsFactors = FALSE)
+xf <- read.csv("results_x_route_fall.csv", header=TRUE, stringsAsFactors = FALSE)
+xs <- read.csv("results_x_route_spring.csv", header=TRUE, stringsAsFactors = FALSE)
+
+# Create new Time column "Sched.Time" which contains "time" class scheduled times
+af$Sched.Time <- chron(times = af$Start.Time.Schedule)
+as$Sched.Time <- chron(times = as$Start.Time.Schedule)
+bf$Sched.Time <- chron(times = bf$Start.Time.Schedule)
+bs$Sched.Time <- chron(times = bs$Start.Time.Schedule)
+ef$Sched.Time <- chron(times = ef$Start.Time.Schedule)
+es$Sched.Time <- chron(times = es$Start.Time.Schedule)
+xf$Sched.Time <- chron(times = xf$Start.Time.Schedule)
+xs$Sched.Time <- chron(times = xs$Start.Time.Schedule)
+
+# Change Date Column from character to "date"
+af$Date <- chron(dates = af$Date) 
+as$Date <- chron(dates = as$Date)
+bf$Date <- chron(dates = bf$Date) 
+bs$Date <- chron(dates = bs$Date) 
+ef$Date <- chron(dates = ef$Date) 
+es$Date <- chron(dates = es$Date) 
+xf$Date <- chron(dates = xf$Date) 
+xs$Date <- chron(dates = xs$Date) 
+
+af$TotalRidership <- as.numeric(af$TotalRidership)
+as$TotalRidership <- as.numeric(as$TotalRidership)
+bf$TotalRidership <- as.numeric(bf$TotalRidership)
+bs$TotalRidership <- as.numeric(bs$TotalRidership)
+ef$TotalRidership <- as.numeric(ef$TotalRidership)
+es$TotalRidership <- as.numeric(es$TotalRidership)
+xf$TotalRidership <- as.numeric(xf$TotalRidership)
+xs$TotalRidership <- as.numeric(xs$TotalRidership)
+
+af.sched.times <- sort(unique(af$Sched.Time))
+af.times <- data.frame(Time = sched.times)
+
+# Get the results for each data frame
+af.results <- getAvgVariance(af)
+af.results$Time <- chron(times = af.results$Time)
+af.results <- af.results[-1, ] # delete first row, which was intialized with zeros
+write.csv(af.results, "A.F.averages.csv", row.names=FALSE)
+as.results <- getAvgVariance(as)
+as.results$Time <- chron(times = as.results$Time)
+as.results <- as.results[-1, ]
+write.csv(as.results, "A.S.averages.csv", row.names=FALSE)
+
+bf.results <- getAvgVariance(bf)
+bf.results$Time <- chron(times = bf.results$Time)
+bf.results <- bf.results[-1, ]
+write.csv(bf.results, "B.F.averages.csv", row.names=FALSE)
+bs.results <- getAvgVariance(bs)
+bs.results$Time <- chron(times = bs.results$Time)
+bs.results <- bs.results[-1, ]
+write.csv(bs.results, "B.S.averages.csv", row.names=FALSE)
+
+ef.results <- getAvgVariance(ef)
+ef.results$Time <- chron(times = ef.results$Time)
+ef.results <- ef.results[-1, ]
+write.csv(ef.results, "E.F.averages.csv", row.names=FALSE)
+es.results <- getAvgVariance(es)
+es.results$Time <- chron(times = es.results$Time)
+es.results <- es.results[-1, ]
+write.csv(es.results, "E.S.averages.csv", row.names=FALSE)
+
+xf.results <- getAvgVariance(xf)
+xf.results$Time <- chron(times = xf.results$Time)
+xf.results <- xf.results[-1, ]
+write.csv(xf.results, "X.F.averages.csv", row.names=FALSE)
+xs.results <- getAvgVariance(xs)
+xs.results$Time <- chron(times = xs.results$Time)
+xs.results <- xs.results[-1, ]
+write.csv(xs.results, "X.S.averages.csv", row.names=FALSE)
+
+
+
+
+
+####################################################################################
+
+# Creating bar chart for total daily ridership
+c1 <- c(17452,11127,18968)
+c2 <- c(18413,9443,17226)
+df <- rbind(c1, c2)
+
+barplot(df, beside = TRUE,
+        main = "Weather Effects on Total Daily Ridership", 
+        xlab = "Weather", ylab = "Ridership", 
+        ylim = c(0, 24000), 
+        names.arg = c("<.025   >.025in.\nPrecip M-R ", "<.025   >.025in.\nPrecip Friday", "<32deg  >32deg\nAvg Daily Temp"),
+        col = c("skyblue4", "skyblue1"),
+        legend.text = c("Below Threshold","Above Threshold"),
+        args.legend = list(x = "topright"))
+require(Hmisc)
+e1.a <- means$NoPrecip.error
+e1.b <- means$Precip.error
+e2.a <- means.F$NoPrecip.error
+e2.b <- means.F$Precip.error
+e3.a <- 1.96 * sd3.a / sqrt(l3.a)
+e3.b <- 1.96 * sd3.b / sqrt(l3.b)
+
+heights = c(17452, 18413, 11127, 9443, 18968, 17226)
+upper = c(17452+e1.a, 18413+e1.b, 11127+e2.a, 9443+e2.b, 18968+e3.a, 17226+e3.b)
+lower = c(17452-e1.a, 18413-e1.b, 11127-e2.a, 9443-e2.b, 18968-e3.a, 17226-e3.b)
+bpx <- c(1.5, 2.5, 4.5, 5.5, 7.5, 8.5)
+errbar(bpx, heights, upper, lower, add=T, xlab="")
+
+
