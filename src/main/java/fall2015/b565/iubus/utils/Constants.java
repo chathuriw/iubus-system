@@ -32,31 +32,31 @@ public class Constants {
     public class TableNames {
         public static final String B_MR_SPRING_SCHEDULE_TABLE = "B_Schedule_MR_allbuses_Spring";
         public static final String B_MR_FALL_SCHEDULE_TABLE = "B_Schedule_MR_allbuses_Fall";
-        public static final String B_MR_FALL_ROUTE_TABLE = "B_Route_MR_Fall";
-        public static final String B_MR_SPRING_ROUTE_TABLE = "B_Route_MR_Spring";
-        public static final String B_MR_FALL_ROUTE_TIME_TABLE = "B_Route_MR_TIME_Fall";
-        public static final String B_MR_SPRING_ROUTE_TIME_TABLE = "B_Route_MR_TIME_Spring";
+        public static final String B_MR_FALL_ROUTE_TABLE = "B_Route_MR_When_Fall";
+        public static final String B_MR_SPRING_ROUTE_TABLE = "B_Route_MR_When_Spring";
+        public static final String B_MR_FALL_ROUTE_TIME_TABLE = "B_Route_MR_Time_Fall";
+        public static final String B_MR_SPRING_ROUTE_TIME_TABLE = "B_Route_MR_Time_Spring";
 
         public static final String A_MR_SPRING_SCHEDULE_TABLE = "A_Schedule_MR_allbuses_Spring";
         public static final String A_MR_FALL_SCHEDULE_TABLE = "A_Schedule_MR_allbuses_Fall";
-        public static final String A_MR_FALL_ROUTE_TABLE = "A_Route_MR_Fall";
-        public static final String A_MR_SPRING_ROUTE_TABLE = "A_Route_MR_Spring";
-        public static final String A_MR_FALL_ROUTE_TIME_TABLE = "A_Route_MR_TIME_Fall";
-        public static final String A_MR_SPRING_ROUTE_TIME_TABLE = "A_Route_MR_TIME_Spring";
+        public static final String A_MR_FALL_ROUTE_TABLE = "A_Route_MR_When_Fall";
+        public static final String A_MR_SPRING_ROUTE_TABLE = "A_Route_MR_When_Spring";
+        public static final String A_MR_FALL_ROUTE_TIME_TABLE = "A_Route_MR_Time_Fall";
+        public static final String A_MR_SPRING_ROUTE_TIME_TABLE = "A_Route_MR_Time_Spring";
 
         public static final String E_MR_SPRING_SCHEDULE_TABLE = "E_Schedule_MR_allbuses_Spring";
         public static final String E_MR_FALL_SCHEDULE_TABLE = "E_Schedule_MR_allbuses_Fall";
-        public static final String E_MR_FALL_ROUTE_TABLE = "E_Route_MR_Fall";
-        public static final String E_MR_SPRING_ROUTE_TABLE = "E_Route_MR_Spring";
-        public static final String E_MR_FALL_ROUTE_TIME_TABLE = "E_Route_MR_TIME_Fall";
-        public static final String E_MR_SPRING_ROUTE_TIME_TABLE = "E_Route_MR_TIME_Spring";
+        public static final String E_MR_FALL_ROUTE_TABLE = "E_Route_MR_When_Fall";
+        public static final String E_MR_SPRING_ROUTE_TABLE = "E_Route_MR_When_Spring";
+        public static final String E_MR_FALL_ROUTE_TIME_TABLE = "E_Route_MR_Time_Fall";
+        public static final String E_MR_SPRING_ROUTE_TIME_TABLE = "E_Route_MR_Time_Spring";
 
         public static final String X_MR_SPRING_SCHEDULE_TABLE = "X_Schedule_MR_allbuses_Spring";
         public static final String X_MR_FALL_SCHEDULE_TABLE = "X_Schedule_MR_allbuses_Fall";
-        public static final String X_MR_FALL_ROUTE_TABLE = "X_Route_MR_Fall";
-        public static final String X_MR_SPRING_ROUTE_TABLE = "X_Route_MR_Spring";
-        public static final String X_MR_FALL_ROUTE_TIME_TABLE = "X_Route_MR_TIME_Fall";
-        public static final String X_MR_SPRING_ROUTE_TIME_TABLE = "X_Route_MR_TIME_Spring";
+        public static final String X_MR_FALL_ROUTE_TABLE = "X_Route_MR_When_Fall";
+        public static final String X_MR_SPRING_ROUTE_TABLE = "X_Route_MR_When_Spring";
+        public static final String X_MR_FALL_ROUTE_TIME_TABLE = "X_Route_MR_Time_Fall";
+        public static final String X_MR_SPRING_ROUTE_TIME_TABLE = "X_Route_MR_Time_Spring";
 
         public static final String A_MR_FALL_RIDERSHIP_TABLE = "A_Route_Ridership_Fall";
         public static final String A_MR_SPRING_RIDERSHIP_TABLE = "A_Route_Ridership_Spring";

@@ -1,5 +1,5 @@
-stopid,avgTimeFall,avgTimeSpring
-avg118,913.6687,304.8988
-avg78,60.28,32.9716
-avg64,24.2904,10.0895
-avg76,315.187,73.6037
+stopid,TimeFall,TimeSpring
+7th & Woodlawn,44.2151,27.5343
+Auditorium (X),34.5647,19.7955
+IMU,66.1042,34.2649
+Stadium (x),70.2629,124.0811
