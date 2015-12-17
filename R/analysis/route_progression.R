@@ -1,4 +1,6 @@
 library(RMySQL)
+# change to false to access the remote database
+LOCAL = TRUE
 
 # A route M-R
 getRouteProgression(331)
@@ -7,29 +9,37 @@ getRouteProgression(354)
 getRouteProgression(354, 67)
 
 # B route M-R
-getRouteProgression(357, 24)
-getRouteProgression(318, 24)
+getRouteProgression(357, 24, TRUE)
+getRouteProgression(318, 24, TRUE)
 
 # E route M-R
 getRouteProgression(361, 62)
 getRouteProgression(320, 62)
 
 # X route M-R
-getRouteProgression(364, 76, threshold=5, TRUE)
-# Error in route 325
 getRouteProgression(325, 76, threshold=5, TRUE)
+# Error in route 364
+getRouteProgression(364, 76, threshold=5, TRUE)
 
 
 getRouteProgression <- function(routeID, lastStop=-1,
                                 verbose=FALSE, threshold=1000){
-    ## connect to local db
-    mydb = dbConnect(MySQL(), user='rojahend', password='password', dbname='buses',
-        host='localhost')
+    if(LOCAL){
+        mydb = dbConnect(MySQL(), user='rojahend',
+            password='password', dbname='buses', host='localhost')
+    }
+    else{
+        mydb = dbConnect(MySQL(),host="156.56.179.122", user="b565",
+                                  passwd="b565Pwd", db="b565")
+    }
     query = paste('SELECT * FROM intervaldata where route_id=', routeID, ';')
     Route<- dbGetQuery(mydb, query)
     ## only the stops that have been visited more than ~1000 times really matter
     trueStops <- as.numeric(names(table(Route$to)[which(table(Route$to) > threshold)]))
     trueStopstr <- paste(as.character(trueStops), collapse=",")
+    if(verbose){
+        print(paste("True stops: ", trueStopstr))
+    }
     if(lastStop == "-1"){
         print("choose the last stop and try again:")
         dbDisconnect(mydb)

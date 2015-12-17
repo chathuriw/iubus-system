@@ -22,7 +22,6 @@
 package fall2015.b565.iubus;
 
 import fall2015.b565.iubus.db.*;
-import fall2015.b565.iubus.utils.Constants;
 import fall2015.b565.iubus.utils.IUBusUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,30 +41,14 @@ import java.util.Map;
 public class ScheduleVarience {
     private static Logger log = LoggerFactory.getLogger(ScheduleVarience.class);
     public static void main(String[] args) throws Exception{
-        String query1 = IUBusUtils.generateAQueryBetweenStops(Constants.TableNames.A_MR_FALL_ROUTE_TIME_TABLE);
-        String query2 = IUBusUtils.generateAQueryBetweenStops(Constants.TableNames.A_MR_SPRING_ROUTE_TIME_TABLE);
-        String query3 = IUBusUtils.generateBQueryBetweenStops(Constants.TableNames.B_MR_FALL_ROUTE_TIME_TABLE);
-        String query4 = IUBusUtils.generateBQueryBetweenStops(Constants.TableNames.B_MR_SPRING_ROUTE_TIME_TABLE);
-        String query5 = IUBusUtils.generateEQueryBetweenStops(Constants.TableNames.E_MR_FALL_ROUTE_TIME_TABLE);
-        String query6 = IUBusUtils.generateEQueryBetweenStops(Constants.TableNames.E_MR_SPRING_ROUTE_TIME_TABLE);
-        String query7 = IUBusUtils.generateXQueryBetweenStops(Constants.TableNames.X_MR_FALL_ROUTE_TIME_TABLE);
-        String query8 = IUBusUtils.generateXQueryBetweenStops(Constants.TableNames.X_MR_SPRING_ROUTE_TIME_TABLE);
-        System.out.println(query1);
-        System.out.println(query2);
-        System.out.println(query3);
-        System.out.println(query4);
-        System.out.println(query5);
-        System.out.println(query6);
-        System.out.println(query7);
-        System.out.println(query8);
-//        calculateARouteVarianceFall();
-//        calculateARouteVarianceSpring();
-//        calculateBRouteVarianceFall();
-//        calculateBRouteVarianceSpring();
-//        calculateERouteVarianceFall();
-//        calculateERouteVarianceSpring();
-//        calculateXRouteVarianceFall();
-//        calculateXRouteVarianceSpring();
+        calculateARouteVarianceFall();
+        calculateARouteVarianceSpring();
+        calculateBRouteVarianceFall();
+        calculateBRouteVarianceSpring();
+        calculateERouteVarianceFall();
+        calculateERouteVarianceSpring();
+        calculateXRouteVarianceFall();
+        calculateXRouteVarianceSpring();
     }
 
 
@@ -74,8 +57,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("fall_A");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("fall_A");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_fall_A");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_fall_A");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -161,8 +144,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("spring_A");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("spring_A");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_spring_A");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_spring_A");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -244,8 +227,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("fall_B");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("fall_B");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_fall_B");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_fall_B");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -328,8 +311,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("spring_B");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("spring_B");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_Spring_B");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_spring_B");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -413,8 +396,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("fall_E");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("fall_E");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_fall_E");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_fall_E");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -497,8 +480,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("spring_E");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("spring_E");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_spring_E");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_spring_E");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -582,8 +565,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("fall_X");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("fall_X");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_fall_X");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_fall_X");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -666,8 +649,8 @@ public class ScheduleVarience {
         Map<Time, Map<Date, Double>> varianceTimeMap = new HashMap<Time, Map<Date, Double>>();
         try {
             String resultFileLocation = IUBusUtils.getResultFolder();
-            String varianceResultFileName = resultFileLocation + getVarianceResultFileName("spring_X");
-            String varianceAtTimeFileName = resultFileLocation + getVariancAtTimeeResultFileName("spring_X");
+            String varianceResultFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_spring_X");
+            String varianceAtTimeFileName = resultFileLocation + IUBusUtils.getResultFileName("variance_time_spring_X");
 
             File resultFolder = new File(resultFileLocation);
             if (!resultFolder.exists()){
@@ -743,20 +726,5 @@ public class ScheduleVarience {
             log.error("Error while parsing date", e);
             throw new RuntimeException("Error while parsing date", e);
         }
-    }
-
-
-    private static String getVarianceResultFileName(String prefix){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-        Calendar cal = Calendar.getInstance();
-        String date = dateFormat.format(cal.getTime());
-        return "variance_" + prefix + "_" + date;
-    }
-
-    private static String getVariancAtTimeeResultFileName(String prefix){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
-        Calendar cal = Calendar.getInstance();
-        String date = dateFormat.format(cal.getTime());
-        return "variance_time_" + prefix + "_" + date;
     }
 }

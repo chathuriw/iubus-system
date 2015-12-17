@@ -5,10 +5,10 @@ import MySQLdb
 
 ######################################################################
 # ########## A Route M-R
-# primary_routeID = 331
-# secondary_routeID = 354
-# stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
-#          11, 12, 13, 14, 36, 30, 34, 35, 67]
+primary_routeID = 331
+secondary_routeID = 354
+stops = [39, 38, 37, 41,  1,  4,  6,  8, 10,
+         11, 12, 13, 14, 36, 30, 34, 35, 67]
 
 # ########## B Route M-R
 # primary_routeID = 357
@@ -23,32 +23,41 @@ import MySQLdb
 #          12, 13, 14,  1, 55, 57, 58, 59, 107, 61, 62]
 
 # ########## X Route M-R
-primary_routeID = 364
-secondary_routeID = 364
-# secondary_routeID = 325
-stops = [118, 64, 78, 76]
+# Don't use routeID 364, stops are poorly defined
+# primary_routeID = 325
+# secondary_routeID = -1
+# stops = [118, 64, 78, 76]
+
 ######################################################################
 # secondary_routeID should have the same stops as primary_routeID
 # script will ignore secondary_routeID if it == -1
 
-# global variable used to keep track of DEBUG == False output
-newrow_i = 0
-# global variable. True: verbose output, False: minimal output
+# global variable. True: verbose output + limited data
+#                  False: minimal output + all data
 DEBUG = False
+
 # global variable. True: connect to shared MySQL database, false: Bo's db
-REMOTE = True
+REMOTE = False
+
+# where do we want to write the output?
+OUTFILE_DIR = "..\\data\\"   # Windows
+# OUTFILE_DIR = "../data/"     # Linux (and Apple?)
+
+# How many blank lines are we willing to tolerate?
+TAU = 16
+######################################################################
 
 
 def main(argv):
     # get our global variables
     global DEBUG
     global REMOTE
+    global OUTFILE_DIR
     global stops
     global primary_routeID
     global secondary_routeID
+    global TAU
     nstops = len(stops) - 1
-    # default: accept 18 or fewer blank columns (there are only 18 columns)
-    tau = 18
 
     # process command line arguments.
     try:
@@ -64,8 +73,8 @@ def main(argv):
             print "consider changing the route ID in the code instead"
             secondary_routeID = arg
         elif opt == "-t":
-            tau = arg
-            print "no more than", tau, "blank columns will be accepted!"
+            TAU = arg
+            print "no more than", TAU, "blank columns will be accepted!"
         elif opt == "-h":
             print """
     -r <primary route id>
@@ -123,8 +132,8 @@ def main(argv):
         print output
 
     # write the column names to an output file
-    fout_when = open(outfile_name + "_when.csv", 'w')
-    fout_time = open(outfile_name + "_time.csv", 'w')
+    fout_when = open(OUTFILE_DIR + outfile_name + "_when.csv", 'w')
+    fout_time = open(OUTFILE_DIR + outfile_name + "_time.csv", 'w')
     fout_when.write(output + "\n")
     fout_time.write(output + "\n")
 
@@ -150,7 +159,7 @@ def main(argv):
             if DEBUG:
                 print "current day ", when_output[0:10],
                 print " doesn't match ", getDate(line[6]), "...terminate!"
-            writeRow(when_output, fout_when, time_output, fout_time, tau)
+            writeRow(when_output, fout_when, time_output, fout_time, TAU)
             [when_output, time_output] = newRow(line)
             [j, k] = resetJK(nstops)
         # else, if we're suddenly looking at a different bus
@@ -160,7 +169,7 @@ def main(argv):
                 print "current bus ", str(line[4])
                 print " doesn't match ", when_output[11:14],
                 print "...terminate!"
-            writeRow(when_output, fout_when, time_output, fout_time, tau)
+            writeRow(when_output, fout_when, time_output, fout_time, TAU)
             [when_output, time_output] = newRow(line)
             [j, k] = resetJK(nstops)
 
@@ -178,7 +187,7 @@ def main(argv):
             if j == nstops and k == nstops:
                 if DEBUG:
                     print "looks like we've gotta continue on the next row..."
-                writeRow(when_output, fout_when, time_output, fout_time, tau)
+                writeRow(when_output, fout_when, time_output, fout_time, TAU)
                 [when_output, time_output] = newRow(line)
             [j, k] = increment(j, k, nstops)
 
@@ -192,7 +201,7 @@ def main(argv):
         if line[1] == stops[nstops] and line[2] == stops[nstops]:
             if DEBUG:
                 print "we've reached the end of the line!"
-            writeRow(when_output, fout_when, time_output, fout_time, tau)
+            writeRow(when_output, fout_when, time_output, fout_time, TAU)
             [when_output, time_output] = newRow(line)
             [j, k] = resetJK(nstops)
 
@@ -225,6 +234,10 @@ def getTime(datetime):
     return timeout
 
 
+# global variable used to keep track of DEBUG == False output
+newrow_i = 0
+
+
 # add the date and bus id to a new row, prints progress if DEBUG == False
 def newRow(line):
     if not DEBUG:
@@ -236,16 +249,16 @@ def newRow(line):
     return [when_output, time_output]
 
 
-# tau = how many blank lines are we ok with? int from 0-18
+# TAU = how many blank lines are we ok with? int from 0-18
 # fills in any empty spots and writes the finished row to outfile_name.csv
-def writeRow(when_output, fout_when, time_output, fout_time, tau):
+def writeRow(when_output, fout_when, time_output, fout_time, TAU):
     global DEBUG
     # fill any missing columns with blanks
-    while when_output.count(',') < 37:
+    while when_output.count(',') < (len(stops) * 2 + 1):
         when_output = when_output + ','
         time_output = time_output + ','
     # if there are too many blank lines, don't even bother
-    if when_output.count(",,") > tau:
+    if when_output.count(",,") > TAU:
         if DEBUG:
             print "Too much data missing.. skip!"
         return
